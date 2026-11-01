@@ -100,11 +100,8 @@ function renderDetail() {
   const w = works.find(item => item.id === id);
 
   if (!w) {
-    root.innerHTML = `<p class="eyebrow">THE STUDY ROOM</p><h1>Cette fiche est introuvable.</h1><a class="text-link" href="index.html#library">Retour à la bibliothèque ↗</a>`;
-    return;
-  }
-
-  document.title = `${w.title} | The Study Room`;
+    const sheet = studySheets[w.id] || {};
+  const section = (id, number, title, items) => `<section class="detail-section" id="${id}"><p class="eyebrow">${number}</p><h2>${title}</h2><ul class="study-list">${(items || []).map(item => `<li>${escapeHTML(item)}</li>`).join("")}</ul></section>`;
   root.innerHTML = `
     <a class="back-link" href="index.html#library">← Retour à la bibliothèque</a>
     <section class="detail-heading">
@@ -117,12 +114,18 @@ function renderDetail() {
       <button class="outline-button" id="detail-select">${getSelected().includes(w.id) ? "✓ Dans mon programme" : "+ Ajouter à mon programme"}</button>
     </section>
     <div class="detail-columns">
-      <aside class="detail-index"><p class="eyebrow">DANS CETTE FICHE</p><a href="#overview">Présentation</a><a href="#context">Repères</a><a href="#themes">Thèmes</a><a href="#quiz">Quiz</a></aside>
+      <aside class="detail-index"><p class="eyebrow">DANS CETTE FICHE</p><a href="#overview">Présentation</a><a href="#summary">Résumé</a><a href="#context">Repères</a><a href="#figures">Personnages / figures</a><a href="#themes">Thèmes</a><a href="#analysis">Pistes d'analyse</a><a href="#bac">Parcours et bac</a><a href="#oral">Questions d'oral</a><a href="#quiz">Quiz</a></aside>
       <div class="detail-content">
-        <section class="detail-section" id="overview"><p class="eyebrow">01 · OVERVIEW</p><h2>Présentation de l'œuvre</h2><p>${escapeHTML(w.description)}</p></section>
-        <section class="detail-section" id="context"><p class="eyebrow">02 · LITERARY NOTES</p><h2>Repères littéraires</h2><div class="fact-box"><span>Repère</span><strong>${escapeHTML(w.repere || w.period)}</strong></div><div class="fact-box"><span>Parcours</span><strong>${escapeHTML(w.parcours)}</strong></div><p class="small-note">Cette fiche constitue une première base de révision. Complète-la avec les notes de cours, ton édition et les analyses travaillées avec ton professeur.</p></section>
-        <section class="detail-section" id="themes"><p class="eyebrow">03 · KEY IDEAS</p><h2>Thèmes principaux</h2><div class="tag-list">${(w.themes || []).map(t => `<span>${escapeHTML(t)}</span>`).join("")}</div></section>
-        <section class="detail-section quiz-section" id="quiz"><p class="eyebrow">04 · TEST YOUR KNOWLEDGE</p><h2>Le petit quiz</h2><p class="muted">Quelques questions pour vérifier tes premiers repères.</p><div class="quiz-box"><div class="quiz-progress"><span id="quiz-progress"></span></div><p class="quiz-count" id="quiz-count"></p><h3 id="quiz-question"></h3><div id="quiz-answers" class="quiz-answers"></div><p id="quiz-feedback" aria-live="polite"></p><button id="quiz-next" class="solid-button" disabled>Question suivante</button><div id="quiz-result" class="hidden"><h3 id="quiz-score"></h3><p id="quiz-message"></p><button id="quiz-restart" class="outline-button">Recommencer</button></div></div></section>
+        <section class="detail-section" id="overview"><p class="eyebrow">01 · PRÉSENTATION</p><h2>Comprendre l'œuvre</h2><p>${escapeHTML(w.description)}</p><div class="fact-box"><span>Repère littéraire</span><strong>${escapeHTML(w.repere || w.period)}</strong></div></section>
+        ${section("summary","02 · REPÈRES NARRATIFS","Résumé et progression",sheet.summary)}
+        <section class="detail-section" id="context"><p class="eyebrow">03 · CONTEXTE</p><h2>Repères littéraires</h2><div class="fact-box"><span>Période</span><strong>${escapeHTML(w.period)}</strong></div><div class="fact-box"><span>Parcours</span><strong>${escapeHTML(w.parcours)}</strong></div><p>Replace toujours l'œuvre dans son époque : contexte historique, mouvements littéraires, débats intellectuels et choix d'écriture. Les repères propres à ton édition et à ton cours restent prioritaires.</p></section>
+        ${section("figures","04 · PERSONNAGES","Personnages et figures importantes",sheet.figures)}
+        <section class="detail-section" id="themes"><p class="eyebrow">05 · GRANDS ENJEUX</p><h2>Thèmes principaux</h2><div class="tag-list">${(w.themes || []).map(t => `<span>${escapeHTML(t)}</span>`).join("")}</div></section>
+        ${section("analysis","06 · LECTURE ANALYTIQUE","Pistes d'analyse",sheet.analysis)}
+        ${section("bac","07 · OBJECTIF BAC","Relier l'œuvre au parcours",sheet.bac)}
+        ${section("oral","08 · S'ENTRAÎNER","Questions possibles à l'oral",sheet.oral)}
+        <section class="detail-section"><p class="eyebrow">À COMPLÉTER</p><h2>Mes notes de cours</h2><p>Ajoute ici tes citations exactes, les pages de ton édition, les analyses de textes et les remarques de ton professeur. Les citations ne sont volontairement pas inventées.</p></section>
+        <section class="detail-section quiz-section" id="quiz"><p class="eyebrow">09 · MÉMORISATION</p><h2>Vérifier ses connaissances</h2><p class="muted">Réponds aux questions puis relis les explications.</p><div class="quiz-box"><div class="quiz-progress"><span id="quiz-progress"></span></div><p class="quiz-count" id="quiz-count"></p><h3 id="quiz-question"></h3><div id="quiz-answers" class="quiz-answers"></div><p id="quiz-feedback" aria-live="polite"></p><button id="quiz-next" class="solid-button" disabled>Question suivante</button><div id="quiz-result" class="hidden"><h3 id="quiz-score"></h3><p id="quiz-message"></p><button id="quiz-restart" class="outline-button">Recommencer</button></div></div></section>
       </div>
     </div>`;
 

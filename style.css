@@ -126,3 +126,10 @@ footer { display:flex; justify-content:space-between; gap:15px; padding:24px 7%;
   .fact-box strong { text-align:left; }
   footer { flex-direction:column; }
 }
+
+
+/* Mise en forme des fiches de révision enrichies */
+.study-list { padding-left: 1.25rem; margin: 1rem 0 0; }
+.study-list li { margin: 0 0 .9rem; line-height: 1.8; padding-left: .25rem; }
+.detail-content .detail-section > p:not(.eyebrow) { line-height: 1.85; }
+.detail-index a { display:block; margin:.55rem 0; }
