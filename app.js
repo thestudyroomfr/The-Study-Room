@@ -100,7 +100,11 @@ function renderDetail() {
   const w = works.find(item => item.id === id);
 
   if (!w) {
-    const sheet = studySheets[w.id] || {};
+    root.innerHTML = '<p>Cette fiche est introuvable. Retourne à la bibliothèque pour choisir une œuvre.</p>';
+    return;
+  }
+
+  const sheet = studySheets[w.id] || {};
   const section = (id, number, title, items) => `<section class="detail-section" id="${id}"><p class="eyebrow">${number}</p><h2>${title}</h2><ul class="study-list">${(items || []).map(item => `<li>${escapeHTML(item)}</li>`).join("")}</ul></section>`;
   root.innerHTML = `
     <a class="back-link" href="index.html#library">← Retour à la bibliothèque</a>
